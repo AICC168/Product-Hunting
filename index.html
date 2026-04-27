@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>百万美金淘金赛·贵阳跨境电商综试区专场</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: "Microsoft YaHei", sans-serif; }
+        .btn { @apply px-6 py-3 rounded-lg font-bold text-white transition-all cursor-pointer; }
+        .btn-primary { @apply bg-blue-600 hover:bg-blue-700; }
+        .btn-success { @apply bg-green-600 hover:bg-green-700; }
+        .btn-danger { @apply bg-red-600 hover:bg-red-700; }
+        .btn-warning { @apply bg-orange-500 hover:bg-orange-600; }
+        .card { @apply bg-white rounded-xl shadow-lg p-6 border border-gray-100; }
+        .badge-safe { @apply bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm font-bold; }
+        .badge-warn { @apply bg-orange-100 text-orange-700 px-3 py-1 rounded-full text-sm font-bold; }
+        .badge-danger { @apply bg-red-100 text-red-700 px-3 py-1 rounded-full text-sm font-bold; }
+        .section { @apply min-h-screen w-full flex flex-col; }
+        .hide { display: none !important; }
+        @keyframes countDown { from { width: 100%; } to { width: 0%; } }
+        .progress-bar { height: 8px; background: linear-gradient(90deg, #2563eb, #10b981); border-radius: 4px; animation: countDown 1080s linear; }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- 全局数据：贵州本土化选品库 -->
+    <script>
+        const productList = [
+            // 贵州本土产品
+            {
+                id: 1,
+                name: "贵州苗绣手工托特包",
+                market: "法国、意大利",
+                price: "79.99欧元",
+                cost: "18欧元",
+                sellingPoint: "非遗文化，手工制作，差异化极强",
+                profitRate: 0.6,
+                riskLevel: "safe",
+                riskText: "搜索量月增65%，竞争度极低；贵阳综试区提供非遗产品出海补贴15%；仅供应链产能有限，月供货不超500个",
+                isLocal: true,
+                knowledge: "符合选品五大原则之目标市场适配+自身优势匹配原则"
+            },
+            {
+                id: 2,
+                name: "蜡染真丝围巾",
+                market: "美国、日本",
+                price: "59.99美元",
+                cost: "12美元",
+                sellingPoint: "中国风艺术感，礼品市场需求大",
+                profitRate: 0.65,
+                riskLevel: "warn",
+                riskText: "搜索量稳定，竞争度低；需提供材质检测报告，无报告可能被海关扣货",
+                isLocal: true,
+                knowledge: "符合选品五大原则之消费者需求匹配原则"
+            },
+            {
+                id: 3,
+                name: "贵州银饰耳环",
+                market: "英国、德国",
+                price: "39.99英镑",
+                cost: "8英镑",
+                sellingPoint: "民族特色，设计独特，复购率高",
+                profitRate: 0.6,
+                riskLevel: "warn",
+                riskText: "搜索量月增40%，竞争度中等；需标注925银材质，虚假宣传会被平台处罚",
+                isLocal: true,
+                knowledge: "符合跨境产品品质管控要求"
+            },
+            {
+                id: 4,
+                name: "刺梨原液礼盒",
+                market: "美国、澳大利亚",
+                price: "49.99美元",
+                cost: "10美元",
+                sellingPoint: "天然维C，健康饮品，中国特色",
+                profitRate: -1,
+                riskLevel: "danger",
+                riskText: "美国食品需FDA注册，液体物流成本高，破损率20%，无认证100%扣货",
+                isLocal: true,
+                knowledge: "触碰选品8条死亡红线之需认证产品禁令"
+            },
+            {
+                id: 5,
+                name: "都匀毛尖茶包",
+                market: "东南亚、加拿大",
+                price: "24.99加元",
+                cost: "5加元",
+                sellingPoint: "中国名茶，便携装，日常饮用需求大",
+                profitRate: -1,
+                riskLevel: "danger",
+                riskText: "植物产品需进口检疫证明，加拿大对茶叶农药残留要求极严，无资质会被销毁",
+                isLocal: true,
+                knowledge: "触碰选品8条死亡红线之平台禁售品禁令"
+            },
+            {
+                id: 6,
+                name: "贵州辣椒面礼盒",
+                market: "美国、墨西哥",
+                price: "19.99美元",
+                cost: "3美元",
+                sellingPoint: "中国特色调味品，海外华人需求大",
+                profitRate: -1,
+                riskLevel: "danger",
+                riskText: "食品需FDA注册，粉末类产品海关查验率80%，自制食品禁止销售",
+                isLocal: true,
+                knowledge: "触碰选品8条死亡红线之需认证产品禁令"
+            },
+            {
+                id: 7,
+                name: "户外折叠登山杖",
+                market: "欧洲、美国",
+                price: "49.99欧元",
+                cost: "10欧元",
+                sellingPoint: "贵州户外产业带优势，质优价廉",
+                profitRate: 0.6,
+                riskLevel: "safe",
+                riskText: "搜索量月增90%，竞争度中等；贵阳综试区提供户外产品物流补贴10%，供应链稳定",
+                isLocal: true,
+                knowledge: "符合选品五大原则之行业发展阶段匹配原则"
+            },
+            {
+                id: 8,
+                name: "竹制餐具套装",
+                market: "德国、荷兰",
+                price: "29.99欧元",
+                cost: "6欧元",
+                sellingPoint: "环保天然，替代塑料，欧洲需求暴涨",
+                profitRate: 0.65,
+                riskLevel: "safe",
+                riskText: "搜索量月增120%，竞争度低；贵州竹资源丰富，供应链稳定，物流成本低",
+                isLocal: true,
+                knowledge: "符合选品五大原则之目标市场适配+自身优势匹配原则"
+            },
+            {
+                id: 9,
+                name: "酱香白酒酒具套装",
+                market: "美国、东南亚",
+                price: "39.99美元",
+                cost: "8美元",
+                sellingPoint: "搭配贵州白酒，华人市场需求大",
+                profitRate: 0.6,
+                riskLevel: "warn",
+                riskText: "搜索量稳定，竞争度低；不能出现任何白酒品牌标识，否则侵权",
+                isLocal: true,
+                knowledge: "符合跨境风险管控要求"
+            },
+            {
+                id: 10,
+                name: "民族风蜡染笔记本",
+                market: "全球",
+                price: "12.99美元",
+                cost: "2美元",
+                sellingPoint: "文创产品，适合学生和礼品市场",
+                profitRate: 0.7,
+                riskLevel: "safe",
+                riskText: "搜索量稳定，竞争度极低；轻小件，物流成本低，售后率极低",
+                isLocal: true,
+                knowledge: "符合选品五大原则之价格带匹配原则"
+            },
+            // 通用经典产品
+            {
+                id: 11,
+                name: "天然水晶手链",
+                market: "美国、英国",
+                price: "29.99美元",
+                cost: "3美元",
+                sellingPoint: "情绪疗愈，TikTok播放量破亿",
+                profitRate: 0.75,
+                riskLevel: "safe",
+                riskText: "搜索量月增120%，竞争度中等，无合规风险",
+                isLocal: false,
+                knowledge: "符合选品五大原则之消费者需求匹配原则"
+            },
+            {
+                id: 12,
+                name: "可折叠硅胶保鲜盖",
+                market: "德国、法国",
+                price: "19.99欧元",
+                cost: "2欧元",
+                sellingPoint: "环保刚需，亚马逊热销榜前10",
+                profitRate: 0.65,
+                riskLevel: "safe",
+                riskText: "搜索量稳定，竞争度中高，刚需品生命周期长",
+                isLocal: false,
+                knowledge: "符合选品五大原则之消费者需求匹配原则"
+            },
+            {
+                id: 13,
+                name: "万圣节发光南瓜灯",
+                market: "美国",
+                price: "15.99美元",
+                cost: "1.5美元",
+                sellingPoint: "节日爆款，季节性需求暴涨",
+                profitRate: 0.7,
+                riskLevel: "warn",
+                riskText: "搜索量月增300%，竞争度高；季节性极强，11月后销量暴跌90%，库存积压风险高",
+                isLocal: false,
+                knowledge: "符合选品五大原则之行业发展阶段匹配原则"
+            },
+            {
+                id: 14,
+                name: "宠物自动喂食器",
+                market: "日本",
+                price: "4999日元",
+                cost: "80元人民币",
+                sellingPoint: "养宠刚需，复购率高",
+                profitRate: 0.55,
+                riskLevel: "warn",
+                riskText: "搜索量稳定，竞争度中等；需日本PSE认证，无认证会被扣货",
+                isLocal: false,
+                knowledge: "符合选品五大原则之目标市场适配原则"
+            },
+            {
+                id: 15,
+                name: "网红星空投影仪",
+                market: "美国",
+                price: "39.99美元",
+                cost: "4美元",
+                sellingPoint: "TikTok爆款，转化率高",
+                profitRate: 0.7,
+                riskLevel: "warn",
+                riskText: "搜索量月增80%，竞争度中等；外观专利侵权风险高",
+                isLocal: false,
+                knowledge: "符合跨境风险管控要求"
+            },
+            {
+                id: 16,
+                name: "可折叠太阳能充电宝",
+                market: "非洲",
+                price: "29.99美元",
+                cost: "5美元",
+                sellingPoint: "电力短缺，刚需产品",
+                profitRate: 0.6,
+                riskLevel: "safe",
+                riskText: "搜索量月增150%，竞争度低，无合规风险",
+                isLocal: false,
+                knowledge: "符合选品五大原则之目标市场适配原则"
+            },
+            {
+                id: 17,
+                name: "迪士尼米妮发箍",
+                market: "全球",
+                price: "12.99美元",
+                cost: "1美元",
+                sellingPoint: "流量大，受众广，销量高",
+                profitRate: -1,
+                riskLevel: "danger",
+                riskText: "迪士尼专利产品，侵权，100%封店，资金冻结",
+                isLocal: false,
+                knowledge: "触碰选品8条死亡红线之侵权产品禁令"
+            },
+            {
+                id: 18,
+                name: "9.9包邮透明手机壳",
+                market: "美国",
+                price: "9.99美元",
+                cost: "0.5美元",
+                sellingPoint: "成本极低，销量巨大",
+                profitRate: 0.05,
+                riskLevel: "danger",
+                riskText: "搜索量极高，头部卖家垄断90%销量，价格战到底，必亏",
+                isLocal: false,
+                knowledge: "触碰选品8条死亡红线之同质化严重产品禁令"
+            },
+            {
+                id: 19,
+                name: "玻璃制水晶花瓶",
+                market: "加拿大",
+                price: "24.99加元",
+                cost: "3加元",
+                sellingPoint: "家居装饰，需求稳定",
+                profitRate: -0.1,
+                riskLevel: "danger",
+                riskText: "易碎品，售后率40%，物流破损率30%，必亏",
+                isLocal: false,
+                knowledge: "触碰选品8条死亡红线之高售后产品禁令"
+            },
+            {
+                id: 20,
+                name: "USB充电打火机",
+                market: "澳大利亚",
+                price: "25.99澳元",
+                cost: "3澳元",
+                sellingPoint: "新奇实用，竞争小",
+                profitRate: -1,
+                riskLevel: "danger",
+                riskText: "澳大利亚禁售易燃易爆品，海关100%扣货",
+                isLocal: false,
+                knowledge: "触碰选品8条死亡红线之平台禁售品禁令"
+            }
+        ];
+
+        // 全局变量
+        let teamList = [];
+        let currentStep = 1;
+        let queryCount = {};
+    </script>
+
+    <!-- 第1屏：开场首页 -->
+    <section id="step1" class="section bg-gradient-to-br from-blue-900 to-indigo-900 text-white justify-center items-center">
+        <div class="text-center max-w-4xl mx-auto px-4">
+            <img src="https://picsum.photos/id/306/200/100" alt="贵阳跨境电商综试区logo" class="mx-auto mb-8 rounded-lg">
+            <h1 class="text-5xl font-bold mb-4">百万美金淘金赛</h1>
+            <h2 class="text-3xl mb-8 text-blue-200">贵阳跨境电商综试区大学生创业大赛</h2>
+            <p class="text-xl mb-12 text-gray-200">XX大学《跨境电子商务B》课程 | 第5章 选品管理及实践</p>
+            <div class="flex gap-4 justify-center">
+                <button class="btn btn-primary text-2xl px-10 py-4" onclick="goStep(2)">查看大赛规则</button>
+                <button class="btn btn-success text-2xl px-10 py-4" onclick="goStep(3)">进入选品库</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- 第2屏：规则说明 -->
+    <section id="step2" class="section bg-gray-50 py-12">
+        <div class="max-w-6xl mx-auto px-4">
+            <h1 class="text-4xl font-bold text-center mb-12 text-gray-800">大赛规则与专属奖励</h1>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+                <div class="card">
+                    <h2 class="text-2xl font-bold mb-6 text-blue-600">核心参赛规则</h2>
+                    <ul class="space-y-4 text-lg">
+                        <li>✅ 每支团队拥有 <span class="font-bold text-red-600">100万美金</span> 虚拟启动资金，最多选择2个产品投资</li>
+                        <li>✅ 每支团队拥有 <span class="font-bold text-orange-600">2次免费数据查询</span> 机会，可查看产品完整隐藏信息</li>
+                        <li>✅ 每支团队拥有 <span class="font-bold text-green-600">1次免费避坑排查</span> 机会，可确认产品是否触碰死亡红线</li>
+                        <li>✅ 选择贵州本土产品，自动获得 <span class="font-bold text-red-600">10%净利润补贴</span>（贵阳综试区政策）</li>
+                        <li>✅ 最终净利润=投资金额×产品净利润率+本土产品补贴，净利润最高的团队获胜</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h2 class="text-2xl font-bold mb-6 text-green-600">专属获胜奖励</h2>
+                    <ul class="space-y-4 text-lg">
+                        <li>🏆 课程平时分 <span class="font-bold text-red-600">+3分</span></li>
+                        <li>🏆 优先对接贵阳综试区跨境电商创业孵化资源</li>
+                        <li>🏆 亚马逊/TikTok Shop官方全套运营资料包</li>
+                        <li>🏆 课程优秀作业认证，纳入期末成绩评定</li>
+                    </ul>
+                    <div class="mt-8">
+                        <h3 class="text-xl font-bold mb-4 text-red-600">选品8条死亡红线</h3>
+                        <p class="text-gray-700">侵权产品、禁售品、季节性过强、超大超重、高售后、需认证无资质、同质化严重、完全陌生品类</p>
+                    </div>
+                </div>
+            </div>
+            <div class="flex justify-center gap-4">
+                <button class="btn btn-warning" onclick="goStep(1)">返回首页</button>
+                <button class="btn btn-primary" onclick="goStep(3)">进入选品库</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- 第3屏：选品库 -->
+    <section id="step3" class="section bg-gray-50 py-12">
+        <div class="max-w-7xl mx-auto px-4">
+            <h1 class="text-4xl font-bold text-center mb-4 text-gray-800">跨境选品库（贵州本土专场）</h1>
+            <p class="text-center text-gray-600 mb-8 text-lg">点击产品卡片，查看完整数据与隐藏信息 | 每支团队限2次免费查询</p>
+            <!-- 倒计时 -->
+            <div class="mb-8">
+                <p class="text-center text-xl font-bold mb-2">决策倒计时：18分钟</p>
+                <div class="w-full bg-gray-200 rounded-full overflow-hidden">
+                    <div class="progress-bar"></div>
+                </div>
+            </div>
+            <!-- 选品列表 -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mb-12" id="productList">
+                <script>
+                    // 渲染选品列表
+                    const productContainer = document.getElementById('productList');
+                    productList.forEach(product => {
+                        const badgeClass = product.riskLevel === 'safe' ? 'badge-safe' : product.riskLevel === 'warn' ? 'badge-warn' : 'badge-danger';
+                        const badgeText = product.riskLevel === 'safe' ? '低风险' : product.riskLevel === 'warn' ? '中等风险' : '高风险红线';
+                        const localTag = product.isLocal ? '<span class="bg-red-100 text-red-700 px-2 py-1 rounded text-xs font-bold">贵州本土</span>' : '';
+                        
+                        productContainer.innerHTML += `
+                            <div class="card cursor-pointer hover:shadow-xl transition-all" onclick="showProductDetail(${product.id})">
+                                <div class="flex justify-between items-center mb-3">
+                                    ${localTag}
+                                    <span class="${badgeClass}">${badgeText}</span>
+                                </div>
+                                <h3 class="text-xl font-bold mb-2">${product.name}</h3>
+                                <p class="text-gray-600 mb-1">目标市场：${product.market}</p>
+                                <p class="text-gray-600 mb-1">预估售价：${product.price}</p>
+                                <p class="text-gray-600 mb-1">采购成本：${product.cost}</p>
+                                <p class="text-gray-700 font-medium mt-3">核心卖点：${product.sellingPoint}</p>
+                                <div class="mt-4 text-center text-blue-600 font-bold">点击查看完整隐藏数据</div>
+                            </div>
+                        `;
+                    });
+                </script>
+            </div>
+            <div class="flex justify-center gap-4">
+                <button class="btn btn-warning" onclick="goStep(2)">返回规则</button>
+                <button class="btn btn-success" onclick="goStep(4)">提交创业决策</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- 产品详情弹窗 -->
+    <div id="productModal" class="fixed inset-0 bg-black/50 flex justify-center items-center z-50 hide">
+        <div class="card max-w-2xl w-full mx-4">
+            <div id="modalContent"></div>
+            <div class="flex justify-end mt-6">
+                <button class="btn btn-warning" onclick="closeModal()">关闭</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 第4屏：决策提交 -->
+    <section id="step4" class="section bg-gray-50 py-12">
+        <div class="max-w-4xl mx-auto px-4">
+            <h1 class="text-4xl font-bold text-center mb-8 text-gray-800">提交你的创业决策</h1>
+            <div class="card mb-8">
+                <form id="teamForm" class="space-y-6">
+                    <div>
+                        <label class="block text-lg font-bold mb-2">团队名称</label>
+                        <input type="text" id="teamName" class="w-full px-4 py-3 border border-gray-300 rounded-lg text-lg" required placeholder="请输入你的团队名称">
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-lg font-bold mb-2">选品1</label>
+                            <select id="product1" class="w-full px-4 py-3 border border-gray-300 rounded-lg text-lg" required>
+                                <option value="">请选择第一个产品</option>
+                                <script>
+                                    productList.forEach(product => {
+                                        document.write(`<option value="${product.id}">${product.name}</option>`);
+                                    });
+                                </script>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-lg font-bold mb-2">投资金额1（万美金）</label>
+                            <input type="number" id="invest1" class="w-full px-4 py-3 border border-gray-300 rounded-lg text-lg" min="0" max="100" required placeholder="0-100">
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-lg font-bold mb-2">选品2（可选）</label>
+                            <select id="product2" class="w-full px-4 py-3 border border-gray-300 rounded-lg text-lg">
+                                <option value="">不选择第二个产品</option>
+                                <script>
+                                    productList.forEach(product => {
+                                        document.write(`<option value="${product.id}">${product.name}</option>`);
+                                    });
+                                </script>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-lg font-bold mb-2">投资金额2（万美金）</label>
+                            <input type="number" id="invest2" class="w-full px-4 py-3 border border-gray-300 rounded-lg text-lg" min="0" max="100" value="0" placeholder="0-100">
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-lg font-bold mb-2">决策理由（结合选品五大原则）</label>
+                        <textarea id="reason" class="w-full px-4 py-3 border border-gray-300 rounded-lg text-lg" rows="3" required placeholder="请说明你的选品决策理由"></textarea>
+                    </div>
+                    <div class="text-center">
+                        <button type="submit" class="btn btn-primary w-full text-xl">提交决策</button>
+                    </div>
+                </form>
+            </div>
+            <div class="flex justify-center">
+                <button class="btn btn-warning" onclick="goStep(3)">返回选品库</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- 第5屏：实时排名 -->
+    <section id="step5" class="section bg-gray-50 py-12">
+        <div class="max-w-6xl mx-auto px-4">
+            <h1 class="text-4xl font-bold text-center mb-8 text-gray-800">实时净利润排名</h1>
+            <div class="card mb-8">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-lg">
+                        <thead>
+                            <tr class="bg-gray-100">
+                                <th class="py-4 px-4 text-left">排名</th>
+                                <th class="py-4 px-4 text-left">团队名称</th>
+                                <th class="py-4 px-4 text-left">选品1</th>
+                                <th class="py-4 px-4 text-left">选品2</th>
+                                <th class="py-4 px-4 text-right">最终净利润（万美金）</th>
+                            </tr>
+                        </thead>
+                        <tbody id="rankTable">
+                            <!-- 自动渲染排名 -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="flex justify-center gap-4">
+                <button class="btn btn-warning" onclick="goStep(4)">返回提交页</button>
+                <button class="btn btn-success" onclick="goStep(6)">公布最终结果</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- 第6屏：结果复盘 -->
+    <section id="step6" class="section bg-gray-50 py-12">
+        <div class="max-w-6xl mx-auto px-4">
+            <h1 class="text-4xl font-bold text-center mb-4 text-gray-800">大赛结果复盘</h1>
+            <p class="text-center text-gray-600 mb-12 text-xl">跨境电商选品核心知识点回顾</p>
+            
+            <div id="winnerCard" class="card bg-gradient-to-br from-yellow-50 to-orange-50 border-yellow-300 mb-12 text-center">
+                <h2 class="text-3xl font-bold text-orange-600 mb-4">🏆 冠军团队</h2>
+                <h3 id="winnerName" class="text-4xl font-bold mb-4">---</h3>
+                <p class="text-2xl mb-2">最终净利润：<span id="winnerProfit" class="text-red-600 font-bold">0</span> 万美金</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+                <div class="card">
+                    <h2 class="text-2xl font-bold mb-6 text-blue-600">选品五大黄金原则</h2>
+                    <ul class="space-y-3 text-lg">
+                        <li>1. 目标市场适配原则</li>
+                        <li>2. 消费者需求匹配原则</li>
+                        <li>3. 行业发展阶段匹配原则</li>
+                        <li>4. 产品价格带匹配原则</li>
+                        <li>5. 企业自身优势匹配原则</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h2 class="text-2xl font-bold mb-6 text-red-600">选品8条死亡红线</h2>
+                    <ul class="space-y-2 text-lg">
+                        <li>❌ 侵权产品（仿牌、专利侵权）</li>
+                        <li>❌ 平台禁售产品（易燃易爆、管制类）</li>
+                        <li>❌ 季节性过强的产品</li>
+                        <li>❌ 超大超重、物流成本极高的产品</li>
+                        <li>❌ 高售后、高破损率的产品</li>
+                        <li>❌ 需认证无资质的产品（食品、美妆、儿童用品）</li>
+                        <li>❌ 同质化严重、价格战到底的产品</li>
+                        <li>❌ 完全陌生、不懂的产品品类</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="text-center">
+                <button class="btn btn-primary" onclick="goStep(1)">返回首页</button>
+            </div>
+        </div>
+    </section>
+
+    <!-- 核心JS逻辑 -->
+    <script>
+        // 页面切换
+        function goStep(step) {
+            document.querySelectorAll('.section').forEach(el => el.classList.add('hide'));
+            document.getElementById('step' + step).classList.remove('hide');
+            currentStep = step;
+            if(step === 5) renderRankTable();
+            if(step === 6) renderWinner();
+            window.scrollTo(0, 0);
+        }
+
+        // 产品详情弹窗
+        function showProductDetail(id) {
+            const product = productList.find(item => item.id === id);
+            const modal = document.getElementById('productModal');
+            const modalContent = document.getElementById('modalContent');
+            
+            // 查询次数统计
+            if(!queryCount[id]) {
+                queryCount[id] = true;
+            }
+
+            const badgeClass = product.riskLevel === 'safe' ? 'badge-safe' : product.riskLevel === 'warn' ? 'badge-warn' : 'badge-danger';
+            const badgeText = product.riskLevel === 'safe' ? '低风险' : product.riskLevel === 'warn' ? '中等风险' : '高风险红线';
+            const localTag = product.isLocal ? '<span class="bg-red-100 text-red-700 px-2 py-1 rounded text-xs font-bold">贵州本土产品</span>' : '';
+
+            modalContent.innerHTML = `
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-2xl font-bold">${product.name}</h2>
+                    <div class="flex gap-2">${localTag} <span class="${badgeClass}">${badgeText}</span></div>
+                </div>
+                <div class="space-y-3 text-lg">
+                    <p><span class="font-bold">目标市场：</span>${product.market}</p>
+                    <p><span class="font-bold">预估售价：</span>${product.price}</p>
+                    <p><span class="font-bold">采购成本：</span>${product.cost}</p>
+                    <p><span class="font-bold">核心卖点：</span>${product.sellingPoint}</p>
+                    <p class="mt-4"><span class="font-bold text-red-600">隐藏信息：</span>${product.riskText}</p>
+                    <p><span class="font-bold text-blue-600">真实净利润率：</span>${(product.profitRate * 100).toFixed(0)}%</p>
+                    <p class="mt-4 border-t pt-4"><span class="font-bold">对应知识点：</span>${product.knowledge}</p>
+                </div>
+            `;
+            modal.classList.remove('hide');
+        }
+
+        function closeModal() {
+            document.getElementById('productModal').classList.add('hide');
+        }
+
+        // 表单提交
+        document.getElementById('teamForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const teamName = document.getElementById('teamName').value;
+            const product1Id = parseInt(document.getElementById('product1').value);
+            const invest1 = parseFloat(document.getElementById('invest1').value);
+            const product2Id = parseInt(document.getElementById('product2').value) || 0;
+            const invest2 = parseFloat(document.getElementById('invest2').value);
+            const reason = document.getElementById('reason').value;
+
+            // 校验总投资
+            if(invest1 + invest2 > 100) {
+                alert('总投资金额不能超过100万美金！');
+                return;
+            }
+
+            // 计算净利润
+            const product1 = productList.find(item => item.id === product1Id);
+            const product2 = product2Id ? productList.find(item => item.id === product2Id) : null;
+            
+            let profit1 = invest1 * product1.profitRate;
+            let profit2 = product2 ? invest2 * product2.profitRate : 0;
+            
+            // 贵州本土产品补贴
+            let subsidy = 0;
+            if(product1.isLocal) subsidy += profit1 * 0.1;
+            if(product2 && product2.isLocal) subsidy += profit2 * 0.1;
+
+            const totalProfit = profit1 + profit2 + subsidy;
+
+            // 保存团队数据
+            teamList.push({
+                name: teamName,
+                product1: product1.name,
+                product2: product2 ? product2.name : '无',
+                invest1: invest1,
+                invest2: invest2,
+                profit1: profit1,
+                profit2: profit2,
+                subsidy: subsidy,
+                totalProfit: totalProfit,
+                reason: reason
+            });
+
+            // 重置表单
+            this.reset();
+            alert('决策提交成功！');
+            goStep(5);
+        });
+
+        // 渲染排名表
+        function renderRankTable() {
+            const rankTable = document.getElementById('rankTable');
+            // 排序
+            const sortedList = [...teamList].sort((a, b) => b.totalProfit - a.totalProfit);
+            rankTable.innerHTML = '';
+            sortedList.forEach((team, index) => {
+                rankTable.innerHTML += `
+                    <tr class="border-b border-gray-200 hover:bg-gray-50">
+                        <td class="py-4 px-4 font-bold">${index + 1}</td>
+                        <td class="py-4 px-4 font-bold">${team.name}</td>
+                        <td class="py-4 px-4">${team.product1}（${team.invest1}万）</td>
+                        <td class="py-4 px-4">${team.product2}${team.invest2 > 0 ? '（' + team.invest2 + '万）' : ''}</td>
+                        <td class="py-4 px-4 text-right font-bold ${team.totalProfit > 0 ? 'text-green-600' : 'text-red-600'}">${team.totalProfit.toFixed(2)}</td>
+                    </tr>
+                `;
+            });
+        }
+
+        // 渲染冠军
+        function renderWinner() {
+            const sortedList = [...teamList].sort((a, b) => b.totalProfit - a.totalProfit);
+            if(sortedList.length > 0) {
+                const winner = sortedList[0];
+                document.getElementById('winnerName').innerText = winner.name;
+                document.getElementById('winnerProfit').innerText = winner.totalProfit.toFixed(2);
+            }
+        }
+
+        // 初始化
+        goStep(1);
+    </script>
+</body>
+</html>
